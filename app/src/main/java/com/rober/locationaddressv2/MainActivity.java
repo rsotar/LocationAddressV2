@@ -1,128 +1,66 @@
 package com.rober.locationaddressv2;
 
-import android.location.Address;
-import android.location.Geocoder;
-import android.os.AsyncTask;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.view.Menu;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.android.kml.KmlLayer;
+
+import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
-import java.util.List;
-
 
 public class MainActivity extends FragmentActivity {
+    private static final LatLng LOWER_MANHATTAN = new LatLng(40.722543, -73.998585);
+    private static final LatLng TIMES_SQUARE = new LatLng(40.7577, -73.9857);
+    private static final LatLng BROOKLYN_BRIDGE = new LatLng(40.7057, -73.9964);
+    /*Av Mate de Luna 3524-3598
+    San Miguel de Tucuman, Tucumán
+    -26.820991, -65.250796*/
+    /*
+    * Av Mate de Luna 2902
+San Miguel de Tucuman, Tucumán
+-26.823136, -65.241205*/
+    /*Lavalle 2903-2999
+T4000AZG San Miguel de Tucuman, Tucumán
+-26.832155, -65.243715*/
+    private static final LatLng Mate_1 = new LatLng(-26.820991, -65.250796);
+    private static final LatLng Mate_2 = new LatLng(-26.823136, -65.241205);
+    private static final LatLng Mate_3 = new LatLng(-26.832155, -65.243715);
 
-    GoogleMap googleMap;
-    MarkerOptions markerOptions;
-    LatLng latLng;
+    private GoogleMap googleMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        SupportMapFragment supportMapFragment = (SupportMapFragment)
-                getSupportFragmentManager().findFragmentById(R.id.map);
-
-        // Getting a reference to the map
-        googleMap = supportMapFragment.getMap();
-
-        // Getting reference to btn_find of the layout activity_main
-        Button btn_find = (Button) findViewById(R.id.btn_find);
-
-        // Defining button click event listener for the find button
-        OnClickListener findClickListener = new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Getting reference to EditText to get the user input location
-                EditText etLocation = (EditText) findViewById(R.id.et_location);
-
-                // Getting user input location
-                String location = etLocation.getText().toString();
-
-                if(location!=null && !location.equals("")){
-                    new GeocoderTask().execute(location);
-                }
-            }
-        };
-
-        // Setting button click event listener for the find button
-        btn_find.setOnClickListener(findClickListener);
-
-
+        setUpMapIfNeeded();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.activity_main, menu);
-        return true;
+    private void setUpMapIfNeeded() {
+        // check if we have got the googleMap already
+        if (googleMap == null) {
+            googleMap = ((SupportMapFragment) getSupportFragmentManager()
+                    .findFragmentById(R.id.map)).getMap();
+            if (googleMap != null) {
+
+                addLines();
+            }
+        }
     }
 
+    private void addLines() {
 
-    // An AsyncTask class for accessing the GeoCoding Web Service
-    private class GeocoderTask extends AsyncTask<String, Void, List<Address>> {
+        googleMap.addPolyline((new PolylineOptions()).add(Mate_1, Mate_2, Mate_3).width(5).
+                color(Color.BLUE).geodesic(true));
 
-        @Override
-        protected List<Address> doInBackground(String... locationName) {
-            // Creating an instance of Geocoder class
-            Geocoder geocoder = new Geocoder(getBaseContext());
-            List<Address> addresses = null;
+        // move camera to zoom on map
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(Mate_1, 13));
 
-            try {
-                // Getting a maximum of 3 Address that matches the input text
-                addresses = geocoder.getFromLocationName(locationName[0], 3);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return addresses;
-        }
-
-
-        @Override
-        protected void onPostExecute(List<Address> addresses) {
-
-            if(addresses==null || addresses.size()==0){
-                Toast.makeText(getBaseContext(), "No Location found", Toast.LENGTH_SHORT).show();
-            }
-
-            // Clears all the existing markers on the map
-            googleMap.clear();
-
-            // Adding Markers on Google Map for each matching address
-            for(int i=0;i<addresses.size();i++){
-
-                Address address = (Address) addresses.get(i);
-
-                // Creating an instance of GeoPoint, to display in Google Map
-                latLng = new LatLng(address.getLatitude(), address.getLongitude());
-
-                String addressText = String.format("%s, %s",
-                        address.getMaxAddressLineIndex() > 0 ? address.getAddressLine(0) : "",
-                        address.getCountryName());
-
-                markerOptions = new MarkerOptions();
-                markerOptions.position(latLng);
-                markerOptions.title(addressText);
-
-                googleMap.addMarker(markerOptions);
-
-                // Locate the first location
-                if(i==0)
-                    googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-            }
-        }
     }
 }

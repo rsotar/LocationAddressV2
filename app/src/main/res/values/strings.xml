@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <string name="app_name">LocationAddressV2</string>
@@ -6,5 +7,6 @@
     <string name="str_btn_find">Find</string>
     <string name="hnt_et_location">Enter location</string>
     <string name="action_settings">Find</string>
+    <string name="menu_legalnotices">Legal Notices</string>
 
 </resources>
