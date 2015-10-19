@@ -9,26 +9,9 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.maps.android.kml.KmlLayer;
-
-import org.xmlpull.v1.XmlPullParserException;
-
-import java.io.IOException;
 
 public class MainActivity extends FragmentActivity {
-    private static final LatLng LOWER_MANHATTAN = new LatLng(40.722543, -73.998585);
-    private static final LatLng TIMES_SQUARE = new LatLng(40.7577, -73.9857);
-    private static final LatLng BROOKLYN_BRIDGE = new LatLng(40.7057, -73.9964);
-    /*Av Mate de Luna 3524-3598
-    San Miguel de Tucuman, Tucumán
-    -26.820991, -65.250796*/
-    /*
-    * Av Mate de Luna 2902
-San Miguel de Tucuman, Tucumán
--26.823136, -65.241205*/
-    /*Lavalle 2903-2999
-T4000AZG San Miguel de Tucuman, Tucumán
--26.832155, -65.243715*/
+
     private static final LatLng Mate_1 = new LatLng(-26.820991, -65.250796);
     private static final LatLng Mate_2 = new LatLng(-26.823136, -65.241205);
     private static final LatLng Mate_3 = new LatLng(-26.832155, -65.243715);
